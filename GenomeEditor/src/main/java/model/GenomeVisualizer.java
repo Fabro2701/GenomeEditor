@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import model.elements.Matrix;
 import model.elements.Triangle;
@@ -35,13 +36,14 @@ public class GenomeVisualizer extends JPanel{
 	float fYaw,fXaw;
 	List<BaseSet>bases;
 	float baseShift=1f;
+	float rotZ=0f,rotY=0f,rotX=0f;
 	
 	public GenomeVisualizer(int width, int height, Genotype geno) {
 		this.WIDTH = width;
 		this.HEIGHT = height;
 		
 		bases = new ArrayList<BaseSet>();
-		for(int i=0;i<10;i++) {
+		for(int i=0;i<20;i++) {
 			bases.add(new BaseSet(i));
 		}
 		
@@ -56,6 +58,10 @@ public class GenomeVisualizer extends JPanel{
 			
 			boolean pressed = false;
     		Point current = null;
+    		@Override
+			public void mouseClicked(MouseEvent e) {
+    			//advance(0.0005f);
+			}
     		@Override
 			public void mousePressed(MouseEvent e) {
     			//advance(0.0005f);
@@ -83,7 +89,6 @@ public class GenomeVisualizer extends JPanel{
 			}
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
-				System.out.println(GenomeVisualizer.this.lookDir);
 				Vector3D vForward = Vector3D.mul(GenomeVisualizer.this.lookDir, -((float)e.getWheelRotation())*0.3f);
 				GenomeVisualizer.this.camera = Vector3D.add(GenomeVisualizer.this.camera, vForward);
 				repaint();
@@ -117,6 +122,16 @@ public class GenomeVisualizer extends JPanel{
 					  GenomeVisualizer.this.camera.z+=0.8f;
 				    break;
 
+				  case KeyEvent.VK_Z:
+					  rotZ+=0.05f;
+				    break;
+				  case KeyEvent.VK_X:
+					  rotX+=0.05f;
+				    break;
+				  case KeyEvent.VK_Y:
+					  rotY+=0.05f;
+				    break;
+
 				  default:				    
 				}
 				repaint();
@@ -141,13 +156,17 @@ public class GenomeVisualizer extends JPanel{
 		g2.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 		
 		//time+=0.1f;
-		Matrix zrotation = Matrix.Matrix_MakeRotationZ(time);
-		Matrix xrotation = Matrix.Matrix_MakeRotationX(time);
+		Matrix zrotation = Matrix.Matrix_MakeRotationZ(this.rotZ);
+		Matrix xrotation = Matrix.Matrix_MakeRotationX(this.rotX);
+		Matrix yrotation = Matrix.Matrix_MakeRotationY(this.rotY);
+		//rotZ=0f;rotY=0f;rotX=0f;
 		
 		Matrix matTrans = Matrix.translate(0f, 0f, 8f);
 		
 		Matrix matWorld = Matrix.identity();
-		//matWorld = zrotation.multiply(xrotation);
+		matWorld = matWorld.multiply(xrotation);
+		matWorld = matWorld.multiply(yrotation);
+		matWorld = matWorld.multiply(zrotation);
 		matWorld = matWorld.multiply(matTrans);
 		
 		Vector3D vUp = new Vector3D(0f,1f,0f);
@@ -165,34 +184,31 @@ public class GenomeVisualizer extends JPanel{
 		List<Vector3D>strand1 = Triangulate.createStrand(0f);
 		List<Vector3D>strand2 = Triangulate.createStrand(3.14159f);
 		
-		int alpha = 200;
+		int alpha;
 		
-		
+		alpha = 200;
 		g2.setStroke(new BasicStroke(5f));
 		Color ploidyColors[] = new Color[]{new Color(255,0,0,alpha),new Color(0,255,0,alpha),new Color(0,0,255,alpha)};
 		this.drawBases(g2, matWorld, matView, bases, strand1, strand2, ploidyColors);
 		
 		
-
+		alpha = 255;
 		g2.setStroke(new BasicStroke(10f));
 		g2.setColor(new Color(70,70,70,alpha));
 		this.drawStrands(g2, matWorld, matView, strand1);
 		g2.setColor(new Color(70,70,70,alpha));
 		this.drawStrands(g2, matWorld, matView, strand2);
 		
-		
+	
 		
 		
 	}
 	protected void drawBases(Graphics2D g2, Matrix matWorld, Matrix matView, List<BaseSet> bases, List<Vector3D>strand1, List<Vector3D>strand2, Color ploidyColors[]) {
-		List<Triangle>todraw = new ArrayList<Triangle>();
-		int innerShift = strand1.size()/bases.size() - 1;System.out.println(innerShift);
 		
-		
+		float innerShift = (float)strand1.size()/bases.size();
 		for(BaseSet baseSet:bases) {
-			//float y = baseShift*innerShift*0.2f*base.position;
-			Vector3D s1 = strand1.get(baseSet.position * innerShift);
-			Vector3D s2 = strand2.get(baseSet.position * innerShift);
+			Vector3D s1 = strand1.get((int)(baseSet.position * innerShift));
+			Vector3D s2 = strand2.get((int)(baseSet.position * innerShift));
 			float ploidyShift = Math.abs((s1.x-s2.x)/(float)Constants.PLOIDY);
 			
 			float x1 = s1.x;
@@ -203,85 +219,42 @@ public class GenomeVisualizer extends JPanel{
 			float z2 = s2.z;
 
 
-			
 			for(float i=0f;i<Constants.PLOIDY;i+=1f) {
 				
-
 				Vector3D v1 = new Vector3D(x1,y1,z1);
 				Vector3D v2 = new Vector3D(x2,y2,z2);
 				Vector3D mostLeftV = v1.x>v2.x?v1:v2;
 				Vector3D mostRightV = v1.x<v2.x?v1:v2;
-				System.out.println("changes: "+mostLeftV+"   "+mostRightV);
-				mostLeftV.x += (i-(float)Constants.PLOIDY+1f)*ploidyShift;
-				mostRightV.x += i*ploidyShift;
 				
+				Vector3D sub = Vector3D.sub(mostLeftV, mostRightV);
+				float dist = Vector3D.length(sub);
+				Vector3D normal = Vector3D.normal(sub);
+				ploidyShift = Math.abs(dist/(float)Constants.PLOIDY);
+				
+				mostRightV = Vector3D.add(mostRightV, Vector3D.mul(normal, ploidyShift*i));
+				mostLeftV = Vector3D.add(mostLeftV, Vector3D.mul(normal, ploidyShift*(i-(float)Constants.PLOIDY+1f)));
+
 				float roundf=10000f;
 				mostLeftV.x = Math.round(mostLeftV.x*roundf)/roundf;
 				mostRightV.x = Math.round(mostRightV.x*roundf)/roundf;
 				mostLeftV.z = Math.round(mostLeftV.z*roundf)/roundf;
 				mostRightV.z = Math.round(mostRightV.z*roundf)/roundf;
-//				mostLeftV.z = Math.abs(mostLeftV.z);
-//				mostRightV.z = Math.abs(mostRightV.z);
+
 						
 				Vector3D p1 = this.vectorProjection(matWorld, matView, mostLeftV);
 				Vector3D p2 = this.vectorProjection(matWorld, matView, mostRightV);
 
-				g2.setColor(ploidyColors[(int)i]);
+				if(v1.x>v2.x) {
+					g2.setColor(ploidyColors[Constants.PLOIDY-1-(int)i]);
+				}
+				else {
+					g2.setColor(ploidyColors[(int)i]);
+				}
 				g2.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
-				System.out.println("1Drawing: "+p1.x+" to: "+p2.x);
-				//System.out.println("2Drawing: "+(int)p1.x+" to: "+(int)p2.x);
-				
-//				g2.setColor(Color.red);g2.fillOval((int)p1.x, (int)p1.y, 5, 5);
-//				g2.setColor(Color.green);g2.fillOval((int)p2.x, (int)p2.y, 5, 5);
+			
 			}
-			
-			
-			
-//			for(Triangle tri:base.tris) {
-//				Triangle triTransformed = new Triangle(Vector3D.multiplyMatrix(tri.points[0], matWorld),
-//													   Vector3D.multiplyMatrix(tri.points[1], matWorld),
-//													   Vector3D.multiplyMatrix(tri.points[2], matWorld));
-//				
-//				Triangle triViewed = new Triangle(Vector3D.multiplyMatrix(triTransformed.points[0], matView),
-//												  Vector3D.multiplyMatrix(triTransformed.points[1], matView),
-//												  Vector3D.multiplyMatrix(triTransformed.points[2], matView));
-//				
-//				
-//				Triangle triProjected = new Triangle(Vector3D.multiplyMatrix(triViewed.points[0], projectionMatrix),
-//												 Vector3D.multiplyMatrix(triViewed.points[1], projectionMatrix),
-//												 Vector3D.multiplyMatrix(triViewed.points[2], projectionMatrix));
-//				triProjected.points[0] = Vector3D.div(triProjected.points[0], triProjected.points[0].w);
-//				triProjected.points[1] = Vector3D.div(triProjected.points[1], triProjected.points[1].w);
-//				triProjected.points[2] = Vector3D.div(triProjected.points[2], triProjected.points[2].w);
-//				
-//				triProjected.points[0].x *= -1.0f;
-//				triProjected.points[1].x *= -1.0f;
-//				triProjected.points[2].x *= -1.0f;
-//				triProjected.points[0].y *= -1.0f;
-//				triProjected.points[1].y *= -1.0f;
-//				triProjected.points[2].y *= -1.0f;
-//				
-//				Vector3D offsetView = new Vector3D(1f,1f,0f);
-//				triProjected.points[0] = Vector3D.add(triProjected.points[0], offsetView);
-//				triProjected.points[1] = Vector3D.add(triProjected.points[1], offsetView);
-//				triProjected.points[2] = Vector3D.add(triProjected.points[2], offsetView);
-//				
-//				triProjected.points[0].x *= 0.5f * (float)this.WIDTH;
-//				triProjected.points[0].y *= 0.5f * (float)this.HEIGHT;
-//				triProjected.points[1].x *= 0.5f * (float)this.WIDTH;
-//				triProjected.points[1].y *= 0.5f * (float)this.HEIGHT;
-//				triProjected.points[2].x *= 0.5f * (float)this.WIDTH;
-//				triProjected.points[2].y *= 0.5f * (float)this.HEIGHT;
-//				todraw.add(triProjected);
-//			}
 		}
 
-		for(Triangle t:todraw) {
-			//g2.fillOval((int)todraw.get(i).x, (int)todraw.get(i).y, 5, 5);
-			
-			g2.fillPolygon(new int[] {(int) t.points[0].x,(int)t.points[1].x,(int)t.points[2].x}, new int[] {(int)t.points[0].y,(int)t.points[1].y,(int)t.points[2].y}, 3);
-			
-		}
 	}
 	protected void drawStrands(Graphics2D g2, Matrix matWorld, Matrix matView, List<Vector3D>points) {
 		List<Vector3D>todraw = new ArrayList<Vector3D>();
@@ -298,27 +271,36 @@ public class GenomeVisualizer extends JPanel{
 		}
 	}
 	private Vector3D vectorProjection(Matrix matWorld, Matrix matView, Vector3D v) {
-		System.out.println("in: "+v);
+		//System.out.println("in: "+v);
 		Vector3D triTransformed = Vector3D.multiplyMatrix(v, matWorld);
-		System.out.println(triTransformed);
+		//System.out.println(triTransformed);
 		Vector3D triViewed = Vector3D.multiplyMatrix(triTransformed, matView);
-		System.out.println(triViewed);
+		//System.out.println(triViewed);
 		Vector3D triProjected = Vector3D.multiplyMatrix(triViewed, projectionMatrix);
-		System.out.println(triProjected);
+		//System.out.println(triProjected);
 		triProjected = Vector3D.div(triProjected, triProjected.w);
 
 
-		System.out.println("3: "+triProjected);
+		//System.out.println("3: "+triProjected);
 		triProjected.x *= -1.0f;
 		triProjected.y *= -1.0f;
-		System.out.println("4: "+triProjected);
+		//System.out.println("4: "+triProjected);
 		Vector3D offsetView = new Vector3D(1f,1f,0f);
 		triProjected = Vector3D.add(triProjected, offsetView);
 		triProjected.x *= 0.5f * (float)this.WIDTH;
 		triProjected.y *= 0.5f * (float)this.HEIGHT;
-		System.out.println("5: "+triProjected);
-		System.out.println("out: "+triProjected);
-		System.out.println("------");
+		//System.out.println("5: "+triProjected);
+		//System.out.println("out: "+triProjected);
+		//System.out.println("------");
 		return triProjected;
+	}
+
+	public void advance(float t) {
+		
+		this.time += t;
+		this.repaint();
+		SwingUtilities.invokeLater(()->{
+			advance(t);
+		});
 	}
 }

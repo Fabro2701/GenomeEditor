@@ -22,9 +22,7 @@ public class Triangulate {
 		while(t<=domain) {
 			x = a*sinf(t+shift);
 			z = a*cosf(t+shift);
-			points.add(new Vector3D(x,t,z));
-			//System.out.println("point: "+(x*10f)+", "+t);
-			
+			points.add(new Vector3D(x,t,z));			
 			t += step;
 		}
 		return points;

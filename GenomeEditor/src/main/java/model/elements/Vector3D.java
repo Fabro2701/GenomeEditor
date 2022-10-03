@@ -34,11 +34,16 @@ public class Vector3D implements Cloneable{
 		return l.x*r.x + l.y*r.y + l.z*r.z;
 	}
 	public static float length(Vector3D l) {
-		return (float) Math.sqrt(Vector3D.dotProduct(l, l));
+		//return ((float) Math.sqrt(Vector3D.dotProduct(l, l)));
+
+		return Math.abs((float) Math.sqrt(Vector3D.dotProduct(l, l)));
 	}
 	public static Vector3D normal(Vector3D l) {
 		float aux = Vector3D.length(l);
 		return new Vector3D(l.x/aux,l.y/aux,l.z/aux);
+	}
+	public static Vector3D abs(Vector3D l) {
+		return new Vector3D(Math.abs(l.x),Math.abs(l.y),Math.abs(l.z));
 	}
 	public static Vector3D add(Vector3D l, Vector3D r) {
 		return new Vector3D(l.x+r.x,l.y+r.y,l.z+r.z);
