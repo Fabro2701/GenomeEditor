@@ -41,36 +41,4 @@ public class Util {
 		System.out.println(filename+ " loaded");
 		return tris;
 	}
-	public static List<Triangle> createSquare() {
-		List<Triangle> arr = new ArrayList<Triangle>();
-
-		// SOUTH
-		arr.add(new Triangle(new Vector3D(0.0f, 0.0f, 0.0f),    new Vector3D(0.0f, 1.0f, 0.0f),    new Vector3D(1.0f, 1.0f, 0.0f)));                    
-		arr.add(new Triangle(new Vector3D(0.0f, 0.0f, 0.0f),    new Vector3D(1.0f, 1.0f, 0.0f),    new Vector3D(1.0f, 0.0f, 0.0f)));
-
-		// EAST                                                      
-		arr.add(new Triangle(new Vector3D(1.0f, 0.0f, 0.0f),    new Vector3D(1.0f, 1.0f, 0.0f),    new Vector3D(1.0f, 1.0f, 1.0f)));
-		arr.add(new Triangle(new Vector3D(1.0f, 0.0f, 0.0f),    new Vector3D(1.0f, 1.0f, 1.0f),    new Vector3D(1.0f, 0.0f, 1.0f)));
-		//NORTH                                                     
-		arr.add(new Triangle(new Vector3D(1.0f, 0.0f, 1.0f),    new Vector3D(1.0f, 1.0f, 1.0f),    new Vector3D(0.0f, 1.0f, 1.0f)));
-		arr.add(new Triangle(new Vector3D(1.0f, 0.0f, 1.0f),    new Vector3D(0.0f, 1.0f, 1.0f),    new Vector3D(0.0f, 0.0f, 1.0f)));
-       
-		//WEST                                                      
-		arr.add(new Triangle(new Vector3D(0.0f, 0.0f, 1.0f),    new Vector3D(0.0f, 1.0f, 1.0f),    new Vector3D(0.0f, 1.0f, 0.0f)));
-		arr.add(new Triangle(new Vector3D(0.0f, 0.0f, 1.0f),    new Vector3D(0.0f, 1.0f, 0.0f),    new Vector3D(0.0f, 0.0f, 0.0f)));
-        
-		//TOP                                                       
-		arr.add(new Triangle(new Vector3D(0.0f, 1.0f, 0.0f),    new Vector3D(0.0f, 1.0f, 1.0f),    new Vector3D(1.0f, 1.0f, 1.0f)));
-		arr.add(new Triangle(new Vector3D(0.0f, 1.0f, 0.0f),    new Vector3D(1.0f, 1.0f, 1.0f),    new Vector3D(1.0f, 1.0f, 0.0f)));
-        
-		//BOTTOM                                                    
-		arr.add(new Triangle(new Vector3D(1.0f, 0.0f, 1.0f),    new Vector3D(0.0f, 0.0f, 1.0f),    new Vector3D(0.0f, 0.0f, 0.0f)));
-		arr.add(new Triangle(new Vector3D(1.0f, 0.0f, 1.0f),    new Vector3D(0.0f, 0.0f, 0.0f),    new Vector3D(1.0f, 0.0f, 0.0f)));
-		
-		return arr;
-	}
-	public static void main2(String args[]) {
-		Vector3D aux = new Vector3D(3.4f,5f,0.13f);
-		
-	}
 }

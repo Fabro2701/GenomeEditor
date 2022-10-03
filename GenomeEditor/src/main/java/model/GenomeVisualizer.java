@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -125,10 +126,11 @@ public class GenomeVisualizer extends JPanel{
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		System.out.println("painting "+camera);
+		System.out.println("look: "+lookDir);
+		System.out.println("camera: "+camera);
 		Graphics2D g2 = (Graphics2D)g;
 		
-		g2.setColor(Color.black);
+		g2.setColor(Color.white);
 		g2.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 		
 		//time+=0.1f;
@@ -154,7 +156,14 @@ public class GenomeVisualizer extends JPanel{
 		
 		//strands
 		List<Vector3D>strand1 = Triangulate.createStrand(0f);
+		List<Vector3D>strand2 = Triangulate.createStrand(3.14159f);
+		
+		int alpha = 200;
+		g2.setStroke(new BasicStroke(20f));
+		g2.setColor(new Color(70,70,70,alpha));
 		this.drawStrands(g2, matWorld, matView, strand1);
+		g2.setColor(new Color(70,70,70,alpha));
+		this.drawStrands(g2, matWorld, matView, strand2);
 		
 		
 	}
@@ -164,6 +173,9 @@ public class GenomeVisualizer extends JPanel{
 			Vector3D triTransformed = Vector3D.multiplyMatrix(tri, matWorld);
 			Vector3D triViewed = Vector3D.multiplyMatrix(triTransformed, matView);
 			Vector3D triProjected = Vector3D.multiplyMatrix(triViewed, projectionMatrix);
+			
+			triProjected = Vector3D.div(triProjected, triProjected.w);
+
 			//System.out.println(triProjected);
 			triProjected.x *= -1.0f;
 			triProjected.y *= -1.0f;
@@ -174,9 +186,8 @@ public class GenomeVisualizer extends JPanel{
 			todraw.add(triProjected);
 			//System.out.println(triProjected);
 		}
-		g2.setColor(Color.white);
 		for(int i=0;i<todraw.size();i++) {
-			g2.fillOval((int)todraw.get(i).x, (int)todraw.get(i).y, 5, 5);
+			//g2.fillOval((int)todraw.get(i).x, (int)todraw.get(i).y, 5, 5);
 			if(i!=0) {
 				g2.drawLine((int)todraw.get(i).x, (int)todraw.get(i).y, (int)todraw.get(i-1).x, (int)todraw.get(i-1).y);
 			}
