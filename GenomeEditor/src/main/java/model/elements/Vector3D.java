@@ -75,6 +75,10 @@ public class Vector3D implements Cloneable{
 		return "("+x+","+y+","+z+","+w+")";
 		//return "("+x+","+y+","+z+")";
 	}
+	@Override
+	public Object clone() {
+		return new Vector3D(this);
+	}
 }
 
 

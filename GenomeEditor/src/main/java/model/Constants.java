@@ -4,7 +4,7 @@ package model;
 public final class Constants {
 	
 	public static final int CHROMOSOME_LENGTH = 70;
-	public static final int PLOIDY = 2;
+	public static final int PLOIDY = 3;
 	
 	
 	public enum NODE_TYPE {
