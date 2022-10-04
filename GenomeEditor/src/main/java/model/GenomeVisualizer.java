@@ -47,6 +47,7 @@ public class GenomeVisualizer extends JPanel{
 			bases.add(new BaseSet(i));
 		}
 		
+		this.setupObservers();
 		
 		//projectionMatrix = Util.createProjectionMatrix(zfar, znear, a, f, q, frad);
 		projectionMatrix = Matrix.Matrix_MakeProjection(f, a, znear, zfar);
@@ -54,102 +55,14 @@ public class GenomeVisualizer extends JPanel{
 		camera = new Vector3D(0f,0f,0f);
 		lookDir = new Vector3D(0f,0f,1f);
 		
-		MouseAdapter mouseA = new MouseAdapter() {
-			
-			boolean pressed = false;
-    		Point current = null;
-    		@Override
-			public void mouseClicked(MouseEvent e) {
-    			//advance(0.0005f);
-			}
-    		@Override
-			public void mousePressed(MouseEvent e) {
-    			//advance(0.0005f);
-    			if(!pressed) {
-    				pressed = true;
-        			current = e.getPoint();
-    			}
-			}
-    		@Override
-			public void mouseReleased(MouseEvent e) {pressed = false;}
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				if(pressed) {
-					Point dir = e.getPoint();
-					if(dir.equals(current))return;
-					int dx = dir.x-current.x;
-					int dy = dir.y-current.y;
-					
-					float decreaseFactor = 10000.0f;
-					if(Math.abs(dx) >10)GenomeVisualizer.this.fYaw +=(float)dx/decreaseFactor;
-					if(Math.abs(dy) >10)GenomeVisualizer.this.fXaw +=(float)dy/decreaseFactor;
-							
-					repaint();
-				}
-			}
-			@Override
-			public void mouseWheelMoved(MouseWheelEvent e) {
-				Vector3D vForward = Vector3D.mul(GenomeVisualizer.this.lookDir, -((float)e.getWheelRotation())*0.3f);
-				GenomeVisualizer.this.camera = Vector3D.add(GenomeVisualizer.this.camera, vForward);
-				repaint();
-			}
-		};
-		this.addMouseListener(mouseA);
-		this.addMouseMotionListener(mouseA);;
-		this.addMouseWheelListener(mouseA);
-
-		KeyListener keyListener = new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent ke) {
-				int c = ke.getKeyCode();
-				switch(c) {
-				  case KeyEvent.VK_S:
-					  GenomeVisualizer.this.camera.y-=0.8f;
-				    break;
-				  case KeyEvent.VK_W:
-					  GenomeVisualizer.this.camera.y+=0.8f;
-				    break;
-				  case KeyEvent.VK_D:
-					  GenomeVisualizer.this.camera.x-=0.8f;
-				    break;
-				  case KeyEvent.VK_A:
-					  GenomeVisualizer.this.camera.x+=0.8f;
-				    break;
-				  case KeyEvent.VK_R:
-					  GenomeVisualizer.this.camera.z-=0.8f;
-				    break;
-				  case KeyEvent.VK_F:
-					  GenomeVisualizer.this.camera.z+=0.8f;
-				    break;
-
-				  case KeyEvent.VK_Z:
-					  rotZ+=0.05f;
-				    break;
-				  case KeyEvent.VK_X:
-					  rotX+=0.05f;
-				    break;
-				  case KeyEvent.VK_Y:
-					  rotY+=0.05f;
-				    break;
-
-				  default:				    
-				}
-				repaint();
-			}
-			@Override
-			public void keyReleased(KeyEvent ke) {}
-			@Override
-			public void keyTyped(KeyEvent ke) {}
-		};
-		this.addKeyListener(keyListener);
-		this.setFocusable(true);
-        this.requestFocusInWindow();
+		
 	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		System.out.println("look: "+lookDir);
-		System.out.println("camera: "+camera);
+		//System.out.println("look: "+lookDir);
+		//System.out.println("camera: "+camera);
 		Graphics2D g2 = (Graphics2D)g;
 		
 		g2.setColor(Color.white);
@@ -159,7 +72,6 @@ public class GenomeVisualizer extends JPanel{
 		Matrix zrotation = Matrix.Matrix_MakeRotationZ(this.rotZ);
 		Matrix xrotation = Matrix.Matrix_MakeRotationX(this.rotX);
 		Matrix yrotation = Matrix.Matrix_MakeRotationY(this.rotY);
-		//rotZ=0f;rotY=0f;rotX=0f;
 		
 		Matrix matTrans = Matrix.translate(0f, 0f, 8f);
 		
@@ -259,9 +171,7 @@ public class GenomeVisualizer extends JPanel{
 	protected void drawStrands(Graphics2D g2, Matrix matWorld, Matrix matView, List<Vector3D>points) {
 		List<Vector3D>todraw = new ArrayList<Vector3D>();
 		for(Vector3D tri:points) {
-			
 			todraw.add(vectorProjection(matWorld,matView,tri));
-			//System.out.println(triProjected);
 		}
 		for(int i=0;i<todraw.size();i++) {
 			//g2.fillOval((int)todraw.get(i).x, (int)todraw.get(i).y, 5, 5);
@@ -271,30 +181,112 @@ public class GenomeVisualizer extends JPanel{
 		}
 	}
 	private Vector3D vectorProjection(Matrix matWorld, Matrix matView, Vector3D v) {
-		//System.out.println("in: "+v);
 		Vector3D triTransformed = Vector3D.multiplyMatrix(v, matWorld);
-		//System.out.println(triTransformed);
 		Vector3D triViewed = Vector3D.multiplyMatrix(triTransformed, matView);
-		//System.out.println(triViewed);
 		Vector3D triProjected = Vector3D.multiplyMatrix(triViewed, projectionMatrix);
-		//System.out.println(triProjected);
 		triProjected = Vector3D.div(triProjected, triProjected.w);
 
 
-		//System.out.println("3: "+triProjected);
 		triProjected.x *= -1.0f;
 		triProjected.y *= -1.0f;
-		//System.out.println("4: "+triProjected);
 		Vector3D offsetView = new Vector3D(1f,1f,0f);
 		triProjected = Vector3D.add(triProjected, offsetView);
 		triProjected.x *= 0.5f * (float)this.WIDTH;
 		triProjected.y *= 0.5f * (float)this.HEIGHT;
-		//System.out.println("5: "+triProjected);
-		//System.out.println("out: "+triProjected);
-		//System.out.println("------");
+
 		return triProjected;
 	}
+	private void setupObservers() {
+		MouseAdapter mouseA = new MouseAdapter() {
+			boolean pressed = false;
+    		Point current = null;
+    		@Override
+			public void mouseClicked(MouseEvent e) {
+    			GenomeVisualizer.this.requestFocusInWindow();
+			}
+    		@Override
+			public void mousePressed(MouseEvent e) {
+    			//advance(0.0005f);
+    			if(!pressed) {
+    				pressed = true;
+        			current = e.getPoint();
+    			}
+			}
+    		@Override
+			public void mouseReleased(MouseEvent e) {pressed = false;}
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if(pressed) {
+					Point dir = e.getPoint();
+					if(dir.equals(current))return;
+					int dx = dir.x-current.x;
+					int dy = dir.y-current.y;
+					
+					float decreaseFactor = 10000.0f;
+					if(Math.abs(dx) >10)GenomeVisualizer.this.fYaw +=(float)dx/decreaseFactor;
+					if(Math.abs(dy) >10)GenomeVisualizer.this.fXaw +=(float)dy/decreaseFactor;
+							
+					repaint();
+				}
+			}
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				Vector3D vForward = Vector3D.mul(GenomeVisualizer.this.lookDir, -((float)e.getWheelRotation())*0.3f);
+				GenomeVisualizer.this.camera = Vector3D.add(GenomeVisualizer.this.camera, vForward);
+				repaint();
+			}
+		};
+		this.addMouseListener(mouseA);
+		this.addMouseMotionListener(mouseA);;
+		this.addMouseWheelListener(mouseA);
 
+		KeyListener keyListener = new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent ke) {
+				int c = ke.getKeyCode();
+				switch(c) {
+				  case KeyEvent.VK_S:
+					  GenomeVisualizer.this.camera.y-=0.8f;
+				    break;
+				  case KeyEvent.VK_W:
+					  GenomeVisualizer.this.camera.y+=0.8f;
+				    break;
+				  case KeyEvent.VK_D:
+					  GenomeVisualizer.this.camera.x-=0.8f;
+				    break;
+				  case KeyEvent.VK_A:
+					  GenomeVisualizer.this.camera.x+=0.8f;
+				    break;
+				  case KeyEvent.VK_R:
+					  GenomeVisualizer.this.camera.z-=0.8f;
+				    break;
+				  case KeyEvent.VK_F:
+					  GenomeVisualizer.this.camera.z+=0.8f;
+				    break;
+
+				  case KeyEvent.VK_Z:
+					  rotZ+=0.05f;
+				    break;
+				  case KeyEvent.VK_X:
+					  rotX+=0.05f;
+				    break;
+				  case KeyEvent.VK_Y:
+					  rotY+=0.05f;
+				    break;
+
+				  default:				    
+				}
+				repaint();
+			}
+			@Override
+			public void keyReleased(KeyEvent ke) {}
+			@Override
+			public void keyTyped(KeyEvent ke) {}
+		};
+		this.addKeyListener(keyListener);
+		this.setFocusable(true);
+        this.requestFocusInWindow();
+	}
 	public void advance(float t) {
 		
 		this.time += t;
