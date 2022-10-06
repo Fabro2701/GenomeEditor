@@ -1,26 +1,43 @@
 package model.editor.block;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.util.List;
 
+import model.editor.block.DrawElement.Rectangle;
+import model.editor.block.DrawElement.Shape;
+import model.editor.block.DrawElement.StringShape;
+import model.editor.block.DrawElement.Triangle;
 import model.elements.Vector2D;
 
 public class ReturnBlock extends Block{
-
 	@Override
-	public void paint(Graphics2D g2) {
-		
-		
-		Vector2D leftup = new Vector2D(base.x-xleftupMargin, base.y-yleftupMargin);
-		
-		float w=100f,h=25f;
-
+	public void paint(List<Shape> shapes) {
 		
 	
-		g2.fillRoundRect((int)leftup.x, (int)leftup.y, (int)w, (int)h, 10, 10);
+		//upper clip
+		shapes.add(generateUpperClip());
 		
-		g2.fillPolygon(new int[] {(int)(leftup.x+clipShift), (int)(leftup.x+clipShift+clipWidth/2), (int)(leftup.x+clipShift+clipWidth)}, 
-				       new int[] {(int)(leftup.y), (int)(leftup.y-clipHeight/2), (int)(leftup.y)}, 3);
+		//header
+		shapes.add(generateHeader());
+		
+		//lower clip
+		shapes.add(generateLowerClip());
+		
+		//name
+		shapes.add(generateHeaderName("return"));
+	}
+
+	@Override
+	public float getHeight() {
+		return blockHeadery+inblocksSpace;
+	}
+
+	@Override
+	public float getWidth() {
+		// TODO Auto-generated method stub
+		return blockHeaderx;
 	}
 
 }
