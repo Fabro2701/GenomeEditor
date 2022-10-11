@@ -8,11 +8,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import model.Constants;
-import model.GenomeEditor;
-import model.GenomeVisualizer;
-import model.genome.Chromosome;
-import model.genome.Genotype;
+import genome_editing.model.Constants;
+import genome_editing.model.GenomeEditor;
+import genome_editing.model.GenomeVisualizer;
+import genome_editing.model.genome.Chromosome;
+import genome_editing.model.genome.Genotype;
 
 public class Launcher extends JFrame{
 	public Launcher() {
