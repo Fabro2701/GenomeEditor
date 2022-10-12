@@ -21,6 +21,22 @@ public class BlockParser {
 		_string = new String();
 		_tokenizer = new BlockTokenizer();
 	}
+	public JSONObject parseFile(String filename){
+		StringBuilder sb = new StringBuilder();
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("resources/skeletons/"+filename+".sklt")));
+			String aux = reader.readLine();
+			while(aux!=null) {
+				sb.append(aux);
+				aux = reader.readLine();
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return this.parse(sb.toString());
+	}
 	public JSONObject parse(String string){
 		_string = string;
 		_tokenizer.init(string);
@@ -93,7 +109,7 @@ public class BlockParser {
 		String literal = _eat("FUNC_CALL").getString("value");
 		JSONArray params = this.Parameters();
 		this._eat("FUNC_END");
-		return new JSONObject().put("type", "Terminal")
+		return new JSONObject().put("type", "PredefinedBlock")
 							   .put("id", literal.substring(0, literal.length()-1))
 							   .put("params", params);
 	}
@@ -114,7 +130,7 @@ public class BlockParser {
 	}
 	protected JSONObject NTSymbol() {
 		String literal = _eat("NTSYMBOL").getString("value");
-		return new JSONObject().put("type", "NonTerminal").put("id", literal.substring(1, literal.length()-1));
+		return new JSONObject().put("type", "RecursiveBlock").put("id", literal.substring(1, literal.length()-1));
 	}
 	protected JSONObject _eat(String type) {
 		JSONObject token=_lookahead;

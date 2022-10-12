@@ -1,14 +1,14 @@
 <CODE> :- [
-		   Header(a=Str(a="code")),
-		   Childs(a=<IF>),
+		   Header(name=Str(text="code")),
+		   Children(e=<IF>),
 		   Floor()
 		  ].
 <IF> :- [
-		 Header(a=Str(a="if"),a=<COND>),
-		 Childs(),
+		 Header(name=Str(text="if"),right=<COND>),
+		 Children(),
 		 Floor()
 		].
 <COND> :- [
-		   Header(a=<OBS>,a=Str(a="+"),a=<OBS>)
+		   Header(right=<OBS>,right=Str(text="+"),right=<OBS>)
 		  ].
-<OBS> :- [Str(a="ae")],[Str(a="obs2")],[Str(a="qqqqqqq")].
+<OBS> :- [Str(text="ae")],[Str(text="obs2")],[Str(text="qqqqqqq")].

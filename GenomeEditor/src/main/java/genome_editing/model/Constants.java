@@ -2,19 +2,9 @@ package genome_editing.model;
 
 import java.util.HashMap;
 
-import genome_editing.model.editor.block.CodeBlock;
-import genome_editing.model.editor.block.IfBlock;
-import genome_editing.model.editor.block.LineBlock;
+
 
 public final class Constants {
-	
-	public static HashMap<String, Class<?>>clazzMap;
-	static {
-		clazzMap = new HashMap<String, Class<?>>();
-		clazzMap.put("CODE", CodeBlock.class);
-		clazzMap.put("LINE", LineBlock.class);
-		clazzMap.put("IF", IfBlock.class);
-	}
 	
 	public static final int CHROMOSOME_LENGTH = 70;
 	public static final int PLOIDY = 3;
