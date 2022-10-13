@@ -1,14 +1,29 @@
 <CODE> :- [
 		   Header(name=Str(text="code")),
-		   Children(e=<IF>),
+		   Children(e=<LINE>),
 		   Floor()
+		  ],
+		  [
+		   Header(name=Str(text="code")),
+		   Children(e=<CODE>),
+		   Children(e=<LINE>),
+		   Floor()
+		  ].
+<LINE> :- [
+ 		   Header(name=Str(text="line")),
+ 		   Children(e=<IF>),
+ 		   Floor()
+		  ],
+		  [
+		   Header(name=Str(text="return"))
 		  ].
 <IF> :- [
 		 Header(name=Str(text="if"),right=<COND>),
 		 Children(),
 		 Floor()
 		].
+
 <COND> :- [
 		   Header(right=<OBS>,right=Str(text="+"),right=<OBS>)
 		  ].
-<OBS> :- [Str(text="ae")],[Str(text="obs2")],[Str(text="qqqqqqq")].
+<OBS> :- [Header(name=Str(text="ae"))],[Header(name=Str(text="obs2"))],[Header(name=Str(text="qqqqqqq"))].

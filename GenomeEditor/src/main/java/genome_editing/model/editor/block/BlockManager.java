@@ -1,5 +1,6 @@
 package genome_editing.model.editor.block;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -17,10 +18,20 @@ public class BlockManager{
 	Block root;
 	Vector2D base;
 	List<DrawElement.Shape>shapes;
-	static List<Integer>decisions = List.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	static List<Integer>decisions = List.of(1, 1, 5, 0, 0, 1, 0, 5, 0, 3, 0, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	static int cursor=0;
 	static HashMap<String, JSONArray>blockDescs;
 	static Graphics2D g2;
+	
+	static HashMap<String, Color>blockColors;
+	static {
+		blockColors = new HashMap<String, Color>();
+		blockColors.put("CODE", new Color(255,0,0,100));
+		blockColors.put("LINE", new Color(0,255,0,100));
+		blockColors.put("IF", new Color(0,0,255,100));
+		blockColors.put("COND", new Color(255,255,0,100));
+		blockColors.put("OBS", new Color(255,0,255,100));
+	}
 	
 	public BlockManager(Vector2D base) {
 		this.base = base;
@@ -43,6 +54,9 @@ public class BlockManager{
 			}
 		});
 		shapes.stream().forEach(s->s.draw(g2));
+	}
+	public static int getNext() {
+		return decisions.get(cursor++);
 	}
 	public void setRoot(Block root) {
 		this.root = root;

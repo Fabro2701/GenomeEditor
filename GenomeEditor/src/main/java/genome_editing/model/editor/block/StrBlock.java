@@ -35,22 +35,24 @@ public class StrBlock extends PredefinedBlock{
 	}
 	@Override
 	public void paint(List<Shape> shapes) {
-		System.out.println("drawing "+text+"  at "+this.base.x+"  "+textSize);
 		shapes.add(new StringShape(text, 
-								   this.base.x, 
-								   this.base.y, 
+								   this.base.x+2f, 
+								   this.base.y+stringHeight-2f, 
 								   Color.black));
+//		shapes.add(new DrawElement.Rectangle(this.base.x,     this.base.y, 
+//				 1, 100, 
+//				 color));
 	}
 
 	@Override
 	public float getHeight() {
 		// TODO Auto-generated method stub
-		return 0;
+		return stringHeight;
 	}
 
 	@Override
 	public float getWidth() {
-		return textSize;
+		return textSize+3f;
 	}
 
 

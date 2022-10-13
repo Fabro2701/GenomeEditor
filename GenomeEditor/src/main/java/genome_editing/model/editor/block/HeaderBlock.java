@@ -40,30 +40,52 @@ public class HeaderBlock extends PredefinedBlock{
 	}
 	@Override
 	public void paint(List<Shape> shapes) {
+		//shapes.add(new DrawElement.Rectangle(this.base.x, this.base.y, 100, 1, defaultColor));
+
 		if(name!=null) {
-			name.setBase(this.base);
+			name.setBase(new Vector2D(this.base.x, this.base.y));
 			name.paint(shapes);
+			shapes.add(new DrawElement.Rectangle(this.base.x,     this.base.y, 
+											     name.getWidth(), name.getHeight(), 
+											     color));
 		}
 		
-		float shiftx = 8f;
+		float shiftx =  (name!=null?name.getWidth():0f);
 		for(Block child:right) {
-			child.setBase(new Vector2D(base.x+shiftx, base.y));
+			child.setBase(new Vector2D(base.x+shiftx, this.base.y));
 			
 			child.paint(shapes);
 			shiftx+=child.getWidth();
 		}
+		
+		shiftx =  (name!=null?name.getWidth():0f);
+		for(Block child:right) {
+			if(child instanceof PredefinedBlock) {
+				shapes.add(new DrawElement.Rectangle(this.base.x+shiftx,     this.base.y, 
+						 child.getWidth(), stringHeight, 
+						 color));
+				System.out.println("color "+color);
+			}
+			shiftx+=child.getWidth();
+		}
+			
+		
+		
 	}
 
 	@Override
 	public float getHeight() {
 		// TODO Auto-generated method stub
-		return 0;
+		return stringHeight;
 	}
 
 	@Override
 	public float getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
+		float sum = (name!=null?name.getWidth():0f);
+		for(Block child:right) {
+			sum += child.getWidth();
+		}
+		return sum;
 	}
 
 

@@ -31,18 +31,22 @@ public class ChildrenBlock extends PredefinedBlock{
 	}
 	@Override
 	public void paint(List<Shape> shapes) {
-		float shifty = 20f;
+		float shifty = 0f;
 		for(Block child:children) {
 			child.setBase(new Vector2D(base.x+Block.inblockShift, base.y+shifty));
 			child.paint(shapes);
-			shifty+=20f;
+			shifty += child.getHeight();
 		}
+		shapes.add(new DrawElement.Rectangle(base.x, base.y, Block.inblockShift, shifty, color));
 	}
 
 	@Override
 	public float getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		float sum = 0f;
+		for(Block child:children) {
+			sum += child.getHeight();
+		}
+		return sum;
 	}
 
 	@Override

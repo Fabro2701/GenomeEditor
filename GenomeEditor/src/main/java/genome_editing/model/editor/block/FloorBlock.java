@@ -24,13 +24,13 @@ public class FloorBlock  extends PredefinedBlock{
 	@Override
 	public void paint(List<Shape> shapes) {
 		// TODO Auto-generated method stub
-		
+		shapes.add(new DrawElement.Rectangle(base.x, base.y, 40f, floorblockShift, color));
 	}
 
 	@Override
 	public float getHeight() {
 		// TODO Auto-generated method stub
-		return 0;
+		return floorblockShift;
 	}
 
 	@Override

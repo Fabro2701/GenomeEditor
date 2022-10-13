@@ -28,8 +28,8 @@ public class DrawElement {
 		public void draw(Graphics2D g2) {
 			g2.setColor(color);
 			g2.fillRect((int)x, (int)y, (int)width, (int)height);
-			//g2.setColor(Color.black);
-			//g2.drawRect((int)x, (int)y, (int)width, (int)height);
+			g2.setColor(Color.black);
+			g2.drawRect((int)x, (int)y, (int)width, (int)height);
 		}
 	}
 	public static class Triangle extends Shape{
