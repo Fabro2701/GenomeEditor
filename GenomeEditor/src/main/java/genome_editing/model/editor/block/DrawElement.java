@@ -11,6 +11,7 @@ public class DrawElement {
 		public Shape(Color color) {
 			this.color = color;
 		}
+		public abstract boolean contains(int x, int y);
 	}
 	public static class Rectangle extends Shape{
 		float x, y, width, height;
@@ -28,8 +29,29 @@ public class DrawElement {
 		public void draw(Graphics2D g2) {
 			g2.setColor(color);
 			g2.fillRect((int)x, (int)y, (int)width, (int)height);
+			//g2.fillRoundRect((int)x, (int)y, (int)width, (int)height, 10,10);
+			
 			g2.setColor(Color.black);
 			g2.drawRect((int)x, (int)y, (int)width, (int)height);
+		}
+		/**
+		 * W. Randolph Franklin algorithm 
+		 * https://web.archive.org/web/20161108113341/https://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+		 */
+		@Override
+		public boolean contains(int x, int y) {
+			float pointsx[] = new float[] {this.x, this.x+width, this.x+width, this.x};
+			float pointsy[] = new float[] {this.y, this.y, this.y+height, this.y+height};
+			int i;
+			int j;
+			boolean result = false;
+			for (i = 0, j = pointsx.length - 1; i < pointsx.length; j = i++) {
+			  if ((pointsy[i] > y) != (pointsy[j] > y) &&
+			      (x < (pointsx[j] - pointsx[i]) * (y - pointsy[i]) / (pointsy[j]-pointsy[i]) + pointsx[i])) {
+				  result = !result;
+			   }
+			}
+			return result;
 		}
 	}
 	public static class Triangle extends Shape{
@@ -54,6 +76,11 @@ public class DrawElement {
 			//g2.setColor(Color.black);
 			//g2.drawPolygon(new int[] {(int)x1,(int)x2,(int)x3}, new int[] {(int)y1,(int)y2,(int)y3}, 3);
 		}
+		@Override
+		public boolean contains(int x, int y) {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 	public static class StringShape extends Shape{
 		String s;
@@ -71,6 +98,10 @@ public class DrawElement {
 		public void draw(Graphics2D g2) {
 			g2.setColor(color);
 			g2.drawString(s, x, y);
+		}
+		@Override
+		public boolean contains(int x, int y) {
+			return false;
 		}
 	}
 }

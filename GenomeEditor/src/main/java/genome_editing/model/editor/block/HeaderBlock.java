@@ -1,6 +1,7 @@
 package genome_editing.model.editor.block;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +42,12 @@ public class HeaderBlock extends PredefinedBlock{
 	@Override
 	public void paint(List<Shape> shapes) {
 		//shapes.add(new DrawElement.Rectangle(this.base.x, this.base.y, 100, 1, defaultColor));
-
+		bufferShapes.clear();
+		
 		if(name!=null) {
 			name.setBase(new Vector2D(this.base.x, this.base.y));
 			name.paint(shapes);
-			shapes.add(new DrawElement.Rectangle(this.base.x,     this.base.y, 
+			bufferShapes.add(new DrawElement.Rectangle(this.base.x,     this.base.y, 
 											     name.getWidth(), name.getHeight(), 
 											     color));
 		}
@@ -61,15 +63,14 @@ public class HeaderBlock extends PredefinedBlock{
 		shiftx =  (name!=null?name.getWidth():0f);
 		for(Block child:right) {
 			if(child instanceof PredefinedBlock) {
-				shapes.add(new DrawElement.Rectangle(this.base.x+shiftx,     this.base.y, 
+				bufferShapes.add(new DrawElement.Rectangle(this.base.x+shiftx,     this.base.y, 
 						 child.getWidth(), stringHeight, 
 						 color));
-				System.out.println("color "+color);
 			}
 			shiftx+=child.getWidth();
 		}
 			
-		
+		shapes.addAll(bufferShapes);
 		
 	}
 
@@ -86,6 +87,32 @@ public class HeaderBlock extends PredefinedBlock{
 			sum += child.getWidth();
 		}
 		return sum;
+	}
+
+	@Override
+	protected int findRecursivePointedBlock(Point current) {
+		int pos = -1;
+		if(name!=null) {
+			if(name instanceof PredefinedBlock) {
+				pos = ((PredefinedBlock)name).findRecursivePointedBlock(current);
+				if(pos!=-1)return pos;
+			}
+			else {
+				pos = ((RecursiveBlock)name).flip(current);
+				if(pos!=-1)return pos;
+			}
+		}
+		for(Block child:right) {
+			if(child instanceof PredefinedBlock) {
+				pos = ((PredefinedBlock)child).findRecursivePointedBlock(current);
+				if(pos!=-1)return pos;
+			}
+			else {
+				pos = ((RecursiveBlock)child).flip(current);
+				if(pos!=-1)return pos;
+			}
+		}
+		return pos;
 	}
 
 

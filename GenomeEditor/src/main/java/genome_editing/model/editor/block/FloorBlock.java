@@ -1,5 +1,6 @@
 package genome_editing.model.editor.block;
 
+import java.awt.Point;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -43,6 +44,12 @@ public class FloorBlock  extends PredefinedBlock{
 	protected void config() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected int findRecursivePointedBlock(Point current) {
+		// TODO Auto-generated method stub
+		return -1;
 	}
 
 }

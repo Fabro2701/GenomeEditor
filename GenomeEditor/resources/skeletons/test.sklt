@@ -15,15 +15,27 @@
  		   Floor()
 		  ],
 		  [
-		   Header(name=Str(text="return"))
+		   Header(name=Str(text="line"))
+		   Children(e=Header(right=Str(text="return "),right=<ACTION>)),
+ 		   Floor()
 		  ].
 <IF> :- [
 		 Header(name=Str(text="if"),right=<COND>),
-		 Children(),
+		 Children(e=<LINE>),
 		 Floor()
 		].
-
 <COND> :- [
-		   Header(right=<OBS>,right=Str(text="+"),right=<OBS>)
+		   Header(right=<OBS>,right=<OP>,right=<OBS>)
 		  ].
-<OBS> :- [Header(name=Str(text="ae"))],[Header(name=Str(text="obs2"))],[Header(name=Str(text="qqqqqqq"))].
+<OBS> :- [Header(right=Str(text="ae"))],
+		 [Header(name=Str(text="obs2"))],
+		 [Header(name=Str(text="qqqqqqq"))].
+<ACTION> :- [Header(right=Str(text="RIGHT"))],
+			[Header(right=Str(text="LEFT"))],
+			[Header(right=Str(text="UP"))],
+			[Header(right=Str(text="DOWN"))],
+			[Header(right=Str(text="NEUTRAL"))].
+<OP> :- [Header(name=Str(text="<"))],
+[Header(name=Str(text=">"))],
+[Header(name=Str(text="<="))],
+[Header(name=Str(text=">="))].

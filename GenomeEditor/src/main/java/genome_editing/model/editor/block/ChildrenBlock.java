@@ -1,5 +1,6 @@
 package genome_editing.model.editor.block;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ChildrenBlock extends PredefinedBlock{
 	public void paint(List<Shape> shapes) {
 		float shifty = 0f;
 		for(Block child:children) {
+			if(child instanceof PredefinedBlock)((PredefinedBlock) child).setColor(color);
 			child.setBase(new Vector2D(base.x+Block.inblockShift, base.y+shifty));
 			child.paint(shapes);
 			shifty += child.getHeight();
@@ -53,6 +55,21 @@ public class ChildrenBlock extends PredefinedBlock{
 	public float getWidth() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	@Override
+	protected int findRecursivePointedBlock(Point current) {
+		int pos = -1;
+		for(Block child:children) {
+			if(child instanceof PredefinedBlock) {
+				pos = ((PredefinedBlock)child).findRecursivePointedBlock(current);
+				if(pos!=-1)return pos;
+			}
+			else {
+				pos = ((RecursiveBlock)child).flip(current);
+				if(pos!=-1)return pos;
+			}
+		}
+		return pos;
 	}
 
 	

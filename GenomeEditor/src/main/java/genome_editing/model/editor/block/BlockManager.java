@@ -2,6 +2,8 @@ package genome_editing.model.editor.block;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,27 +12,38 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import genome_editing.model.Constants;
 import genome_editing.model.editor.block.DrawElement.Shape;
 import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
+import simulator.RandomSingleton;
 
 public class BlockManager{
 	Block root;
 	Vector2D base;
 	List<DrawElement.Shape>shapes;
-	static List<Integer>decisions = List.of(1, 1, 5, 0, 0, 1, 0, 5, 0, 3, 0, 7, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	static List<Integer>decisions;
 	static int cursor=0;
 	static HashMap<String, JSONArray>blockDescs;
 	static Graphics2D g2;
 	
 	static HashMap<String, Color>blockColors;
 	static {
+		RandomSingleton.setSeed(84L);
+		decisions = new ArrayList<Integer>();
+		for(int i=0;i<Constants.CHROMOSOME_LENGTH;i++) {
+			decisions.add(RandomSingleton.nextInt(256));
+		}
+		//decisions.stream().forEach(e->System.out.println(e));
+		
 		blockColors = new HashMap<String, Color>();
 		blockColors.put("CODE", new Color(255,0,0,100));
 		blockColors.put("LINE", new Color(0,255,0,100));
 		blockColors.put("IF", new Color(0,0,255,100));
 		blockColors.put("COND", new Color(255,255,0,100));
 		blockColors.put("OBS", new Color(255,0,255,100));
+		blockColors.put("ACTION", new Color(0,255,255,100));
+		blockColors.put("OP", new Color(150,150,150,100));
 	}
 	
 	public BlockManager(Vector2D base) {
@@ -40,6 +53,15 @@ public class BlockManager{
 
 		blockDescs = BlockCreator.loadBlocks(program);
 		
+	}
+	public void move(Point current, MouseEvent e) {
+		((RecursiveBlock)root).move(current, e.getPoint()); 
+	}
+	public void flip(MouseEvent e) {
+		int position = ((RecursiveBlock)root).flip(e.getPoint());
+		if(position != -1) {
+			decisions.set(position, decisions.get(position)+1);
+		}
 	}
 	public void paint(Graphics2D g) {
 		g2 = g;
@@ -60,5 +82,8 @@ public class BlockManager{
 	}
 	public void setRoot(Block root) {
 		this.root = root;
+	}
+	public static int getCursor() {
+		return cursor;
 	}
 }

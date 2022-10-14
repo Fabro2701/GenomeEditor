@@ -1,6 +1,8 @@
 package genome_editing.model.editor.block;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,19 +16,53 @@ public class RecursiveBlock extends Block{
 	String rule;
 	List<Block>blocks;
 	Color color;
+	int position;//in chromosome
 	
 	public RecursiveBlock(String ruleReference) {
 		this.rule = ruleReference;
 		blocks = new ArrayList<Block>();
 		color = BlockManager.blockColors.get(ruleReference);
 	}
+	public int flip(Point current) {
+		for(Block b:blocks) {
+			if(b instanceof PredefinedBlock) {
+				List<Shape>shapes = ((PredefinedBlock)b).getBufferShapes();
+				for(Shape s:shapes) {
+					if(s.contains(current.x, current.y)) {
+						return position;
+					}
+				}
+			}
+		}
+		for(Block b:blocks) {
+			if(b instanceof PredefinedBlock) {
+				int pos = ((PredefinedBlock)b).findRecursivePointedBlock(current);
+				if(pos!=-1)return pos;
+			}
+		}
+		return -1;
+	}
+	public void move(Point current, Point dest) {
+		for(Block b:blocks) {
+			if(b instanceof PredefinedBlock) {
+				List<Shape>shapes = ((PredefinedBlock)b).getBufferShapes();
+				for(Shape s:shapes) {
+					if(s.contains(current.x, current.y)) {
+						this.base.x += dest.x-current.x;
+						this.base.y += dest.y-current.y;
+					}
+				}
+			}
+		}
+	}
 	@Override
 	public void paint(List<Shape> shapes) {
 		blocks.clear();
+		position = BlockManager.getCursor();
 		int elec = BlockManager.getNext();
 		JSONArray r = BlockManager.blockDescs.get(rule);
 		elec %= r.length();
-		JSONArray production = BlockManager.blockDescs.get(rule).getJSONArray(elec);
+		JSONArray production = r.getJSONArray(elec);
 		float shifty = 0f;
 		for(int i=0;i<production.length();i++) {
 			JSONObject bo = production.getJSONObject(i);

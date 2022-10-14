@@ -3,6 +3,10 @@ package genome_editing.model;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -19,6 +23,7 @@ import genome_editing.model.editor.block.DrawElement.Shape;
 import genome_editing.model.editor.block.RecursiveBlock;
 import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
+import genome_editing.model.elements.Vector3D;
 import genome_editing.model.genome.Genotype;
 
 public class GenomeEditor extends Editor{
@@ -34,6 +39,38 @@ public class GenomeEditor extends Editor{
 
 	private void init() {
 		manager = new BlockManager(new Vector2D(20f,80f));
+		MouseAdapter mouseA = new MouseAdapter() {
+			boolean pressed = false;
+    		Point current = null;
+    		@Override
+			public void mouseClicked(MouseEvent e) {
+    			GenomeEditor.this.manager.flip(e);
+    			repaint();
+			}
+    		@Override
+			public void mousePressed(MouseEvent e) {
+    			pressed = true;
+    			current = e.getPoint();
+			}
+    		@Override
+			public void mouseReleased(MouseEvent e) {pressed = false;}
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				if(pressed) {
+					GenomeEditor.this.manager.move(current, e);
+					current = e.getPoint();
+					repaint();
+				}
+			}
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+		
+			}
+		};
+		this.addMouseListener(mouseA);
+		this.addMouseMotionListener(mouseA);;
+		this.addMouseWheelListener(mouseA);
+
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package genome_editing.model.editor.block;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -53,6 +54,12 @@ public class StrBlock extends PredefinedBlock{
 	@Override
 	public float getWidth() {
 		return textSize+3f;
+	}
+
+	@Override
+	protected int findRecursivePointedBlock(Point current) {
+		// TODO Auto-generated method stub
+		return -1;
 	}
 
 
