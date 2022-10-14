@@ -2,6 +2,7 @@ package genome_editing.model.editor.block;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 public class DrawElement {
 	public static abstract class Shape{
@@ -11,7 +12,7 @@ public class DrawElement {
 		public Shape(Color color) {
 			this.color = color;
 		}
-		public abstract boolean contains(int x, int y);
+		public abstract boolean contains(Point point);
 	}
 	public static class Rectangle extends Shape{
 		float x, y, width, height;
@@ -39,15 +40,15 @@ public class DrawElement {
 		 * https://web.archive.org/web/20161108113341/https://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 		 */
 		@Override
-		public boolean contains(int x, int y) {
+		public boolean contains(Point point) {
 			float pointsx[] = new float[] {this.x, this.x+width, this.x+width, this.x};
 			float pointsy[] = new float[] {this.y, this.y, this.y+height, this.y+height};
 			int i;
 			int j;
 			boolean result = false;
 			for (i = 0, j = pointsx.length - 1; i < pointsx.length; j = i++) {
-			  if ((pointsy[i] > y) != (pointsy[j] > y) &&
-			      (x < (pointsx[j] - pointsx[i]) * (y - pointsy[i]) / (pointsy[j]-pointsy[i]) + pointsx[i])) {
+			  if ((pointsy[i] > point.y) != (pointsy[j] > point.y) &&
+			      (point.x < (pointsx[j] - pointsx[i]) * (point.y - pointsy[i]) / (pointsy[j]-pointsy[i]) + pointsx[i])) {
 				  result = !result;
 			   }
 			}
@@ -77,7 +78,7 @@ public class DrawElement {
 			//g2.drawPolygon(new int[] {(int)x1,(int)x2,(int)x3}, new int[] {(int)y1,(int)y2,(int)y3}, 3);
 		}
 		@Override
-		public boolean contains(int x, int y) {
+		public boolean contains(Point point) {
 			// TODO Auto-generated method stub
 			return false;
 		}
@@ -100,7 +101,7 @@ public class DrawElement {
 			g2.drawString(s, x, y);
 		}
 		@Override
-		public boolean contains(int x, int y) {
+		public boolean contains(Point point) {
 			return false;
 		}
 	}

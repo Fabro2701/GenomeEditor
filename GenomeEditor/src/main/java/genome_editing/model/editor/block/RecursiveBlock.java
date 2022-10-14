@@ -23,31 +23,30 @@ public class RecursiveBlock extends Block{
 		blocks = new ArrayList<Block>();
 		color = BlockManager.blockColors.get(ruleReference);
 	}
-	public int flip(Point current) {
+
+	@Override
+	public Block find(Point point) {
 		for(Block b:blocks) {
 			if(b instanceof PredefinedBlock) {
 				List<Shape>shapes = ((PredefinedBlock)b).getBufferShapes();
 				for(Shape s:shapes) {
-					if(s.contains(current.x, current.y)) {
-						return position;
-					}
+					if(s.contains(point)) return this;
 				}
 			}
 		}
+		Block block = null;
 		for(Block b:blocks) {
-			if(b instanceof PredefinedBlock) {
-				int pos = ((PredefinedBlock)b).findRecursivePointedBlock(current);
-				if(pos!=-1)return pos;
-			}
+			block = b.find(point);
+			if(block != null)return block;
 		}
-		return -1;
+		return block;
 	}
 	public void move(Point current, Point dest) {
 		for(Block b:blocks) {
 			if(b instanceof PredefinedBlock) {
 				List<Shape>shapes = ((PredefinedBlock)b).getBufferShapes();
 				for(Shape s:shapes) {
-					if(s.contains(current.x, current.y)) {
+					if(s.contains(current)) {
 						this.base.x += dest.x-current.x;
 						this.base.y += dest.y-current.y;
 					}
@@ -94,4 +93,7 @@ public class RecursiveBlock extends Block{
 		return sum;
 	}
 
+	public int getPosition() {
+		return position;
+	}
 }

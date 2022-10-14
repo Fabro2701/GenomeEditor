@@ -47,9 +47,8 @@ public class FloorBlock  extends PredefinedBlock{
 	}
 
 	@Override
-	protected int findRecursivePointedBlock(Point current) {
-		// TODO Auto-generated method stub
-		return -1;
+	public Block find(Point point) {
+		return null;
 	}
 
 }

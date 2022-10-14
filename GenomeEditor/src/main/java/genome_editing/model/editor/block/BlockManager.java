@@ -26,8 +26,8 @@ public class BlockManager{
 	static int cursor=0;
 	static HashMap<String, JSONArray>blockDescs;
 	static Graphics2D g2;
-	
 	static HashMap<String, Color>blockColors;
+	
 	static {
 		RandomSingleton.setSeed(84L);
 		decisions = new ArrayList<Integer>();
@@ -58,8 +58,9 @@ public class BlockManager{
 		((RecursiveBlock)root).move(current, e.getPoint()); 
 	}
 	public void flip(MouseEvent e) {
-		int position = ((RecursiveBlock)root).flip(e.getPoint());
-		if(position != -1) {
+		Block block = root.find(e.getPoint());
+		if(block != null && block instanceof RecursiveBlock) {
+			int position = ((RecursiveBlock)block).getPosition();
 			decisions.set(position, decisions.get(position)+1);
 		}
 	}

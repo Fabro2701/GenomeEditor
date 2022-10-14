@@ -57,20 +57,15 @@ public class ChildrenBlock extends PredefinedBlock{
 		return 0;
 	}
 	@Override
-	protected int findRecursivePointedBlock(Point current) {
-		int pos = -1;
+	public Block find(Point point) {
+		Block block = null;
 		for(Block child:children) {
-			if(child instanceof PredefinedBlock) {
-				pos = ((PredefinedBlock)child).findRecursivePointedBlock(current);
-				if(pos!=-1)return pos;
-			}
-			else {
-				pos = ((RecursiveBlock)child).flip(current);
-				if(pos!=-1)return pos;
-			}
+			block = child.find(point);
+			if(block != null)return block;
 		}
-		return pos;
+		return block;
 	}
+
 
 	
 

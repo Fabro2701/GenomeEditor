@@ -88,32 +88,20 @@ public class HeaderBlock extends PredefinedBlock{
 		}
 		return sum;
 	}
-
 	@Override
-	protected int findRecursivePointedBlock(Point current) {
-		int pos = -1;
+	public Block find(Point point) {
+		Block block = null;
 		if(name!=null) {
-			if(name instanceof PredefinedBlock) {
-				pos = ((PredefinedBlock)name).findRecursivePointedBlock(current);
-				if(pos!=-1)return pos;
-			}
-			else {
-				pos = ((RecursiveBlock)name).flip(current);
-				if(pos!=-1)return pos;
-			}
+			block = name.find(point);
+			if(block != null)return block;
 		}
 		for(Block child:right) {
-			if(child instanceof PredefinedBlock) {
-				pos = ((PredefinedBlock)child).findRecursivePointedBlock(current);
-				if(pos!=-1)return pos;
-			}
-			else {
-				pos = ((RecursiveBlock)child).flip(current);
-				if(pos!=-1)return pos;
-			}
+			block = child.find(point);
+			if(block != null)return block;
 		}
-		return pos;
+		return block;
 	}
+
 
 
 

@@ -27,7 +27,6 @@ public abstract class PredefinedBlock extends Block{
 	protected void setColor(Color color) {
 		this.color = color;
 	}
-	protected abstract int findRecursivePointedBlock(Point current);
 	protected abstract void config();
 	protected abstract void setParameter(String id, JSONObject value);
 }

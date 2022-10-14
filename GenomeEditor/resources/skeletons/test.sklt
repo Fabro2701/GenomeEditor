@@ -36,6 +36,6 @@
 			[Header(right=Str(text="DOWN"))],
 			[Header(right=Str(text="NEUTRAL"))].
 <OP> :- [Header(name=Str(text="<"))],
-[Header(name=Str(text=">"))],
-[Header(name=Str(text="<="))],
-[Header(name=Str(text=">="))].
+		[Header(name=Str(text=">"))],
+		[Header(name=Str(text="<="))],
+		[Header(name=Str(text=">="))].

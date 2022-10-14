@@ -23,16 +23,13 @@ public class BlockParser {
 	}
 	public JSONObject parseFile(String filename){
 		StringBuilder sb = new StringBuilder();
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("resources/skeletons/"+filename+".sklt")));
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("resources/skeletons/"+filename+".sklt")));){
 			String aux = reader.readLine();
-			while(aux!=null) {
+			while(aux != null) {
 				sb.append(aux);
 				aux = reader.readLine();
 			}
-			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return this.parse(sb.toString());
@@ -40,7 +37,6 @@ public class BlockParser {
 	public JSONObject parse(String string){
 		_string = string;
 		_tokenizer.init(string);
-		
 		
 		this._lookahead = this._tokenizer.getNextToken();
 		return this.Program();
