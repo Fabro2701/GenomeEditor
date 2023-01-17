@@ -1,8 +1,8 @@
 package genome_editing.model.elements;
 
-import static genome_editing.model.Constants.cosf;
-import static genome_editing.model.Constants.sinf;
-import static genome_editing.model.Constants.tanf;
+import static util.Util.tanf;
+import static util.Util.cosf;
+import static util.Util.sinf;
 
 public class Matrix {
 	float m[][];

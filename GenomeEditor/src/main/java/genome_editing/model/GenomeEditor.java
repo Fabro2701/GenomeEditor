@@ -24,15 +24,18 @@ import genome_editing.model.editor.block.RecursiveBlock;
 import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
 import genome_editing.model.elements.Vector3D;
-import genome_editing.model.genome.Genotype;
+import simulator.model.entity.individuals.Chromosome;
+import simulator.model.entity.individuals.Genotype;
 
 public class GenomeEditor extends Editor{
 	Genotype geno;
 	GenomeVisualizer visualizer;
 	BlockManager manager;
+	Chromosome<Chromosome.Codon>chChoice;
 	public GenomeEditor(Genotype geno, GenomeVisualizer visualizer) {
 		super();
 		this.geno = geno;
+		this.chChoice = geno.get(0);
 		this.visualizer = visualizer;
 		this.init();
 	} 
@@ -80,17 +83,16 @@ public class GenomeEditor extends Editor{
 		g2.setColor(Color.white);
 		g2.fillRect(2, 0, this.getWidth(), this.getHeight());
 		
-		
+		g2.setColor(Color.black);
+		g2.drawString(geno.toString(), 5, 10);
 		
 		RecursiveBlock block1 = new RecursiveBlock("CODE");
 
-		
+		manager.setChChoice(this.chChoice);
 		manager.setRoot(block1);
 		manager.paint(g2);
 		
-		//blockmanager(list) stores all block (includinnf ghost blocks)
-		//when click is performed the(x,y) search is delegated to blockmanager
-		//who iterates its blocks until finds the corresponded
+		//ghost blocks pending
 
 	}
 	

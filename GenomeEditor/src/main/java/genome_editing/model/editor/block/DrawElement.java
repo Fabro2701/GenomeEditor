@@ -1,5 +1,6 @@
 package genome_editing.model.editor.block;
 
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -33,6 +34,7 @@ public class DrawElement {
 			//g2.fillRoundRect((int)x, (int)y, (int)width, (int)height, 10,10);
 			
 			g2.setColor(Color.black);
+			//g2.setStroke(new BasicStroke(4));
 			g2.drawRect((int)x, (int)y, (int)width, (int)height);
 		}
 		/**

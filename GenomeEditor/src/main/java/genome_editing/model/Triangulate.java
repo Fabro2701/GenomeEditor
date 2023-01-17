@@ -1,13 +1,12 @@
 package genome_editing.model;
 
-import static genome_editing.model.Constants.cosf;
-import static genome_editing.model.Constants.sinf;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-import genome_editing.model.elements.Triangle;
 import genome_editing.model.elements.Vector3D;
+import util.Util;
 
 public class Triangulate {
 	public static List<Vector3D>createStrand(float shift) {
@@ -20,8 +19,8 @@ public class Triangulate {
 		
 		float x,z;
 		while(t<=domain) {
-			x = a*sinf(t+shift);
-			z = a*cosf(t+shift);
+			x = a*Util.sinf(t+shift);
+			z = a*Util.cosf(t+shift);
 			points.add(new Vector3D(x,t,z));			
 			t += step;
 		}

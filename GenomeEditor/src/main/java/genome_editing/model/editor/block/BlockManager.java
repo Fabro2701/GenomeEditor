@@ -12,13 +12,16 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import genome_editing.model.Constants;
 import genome_editing.model.editor.block.DrawElement.Shape;
 import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
+import simulator.Constants;
 import simulator.RandomSingleton;
+import simulator.model.entity.individuals.Chromosome;
+import simulator.model.entity.individuals.Chromosome.Codon;
 
 public class BlockManager{
+	Chromosome<Chromosome.Codon>chChoice;
 	Block root;
 	Vector2D base;
 	List<DrawElement.Shape>shapes;
@@ -29,11 +32,8 @@ public class BlockManager{
 	static HashMap<String, Color>blockColors;
 	
 	static {
-		RandomSingleton.setSeed(84L);
-		decisions = new ArrayList<Integer>();
-		for(int i=0;i<Constants.CHROMOSOME_LENGTH;i++) {
-			decisions.add(RandomSingleton.nextInt(256));
-		}
+		decisions = new ArrayList<Integer>(Constants.CHROMOSOME_LENGTH);
+
 		//decisions.stream().forEach(e->System.out.println(e));
 		
 		blockColors = new HashMap<String, Color>();
@@ -62,6 +62,7 @@ public class BlockManager{
 		if(block != null && block instanceof RecursiveBlock) {
 			int position = ((RecursiveBlock)block).getPosition();
 			decisions.set(position, decisions.get(position)+1);
+			this.chChoice.getCodon(position).setInt(decisions.get(position));
 		}
 	}
 	public void paint(Graphics2D g) {
@@ -86,5 +87,13 @@ public class BlockManager{
 	}
 	public static int getCursor() {
 		return cursor;
+	}
+	public void setChChoice(Chromosome<Codon> chChoice) {
+		this.chChoice = chChoice;
+		decisions.clear();
+		for(int i=0;i<Constants.CHROMOSOME_LENGTH;i++) {
+			decisions.add(this.chChoice.getCodon(i).getIntValue());
+		}
+
 	}
 }

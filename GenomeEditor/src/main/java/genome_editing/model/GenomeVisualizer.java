@@ -17,11 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import genome_editing.model.elements.Matrix;
-import genome_editing.model.elements.Triangle;
 import genome_editing.model.elements.Vector3D;
-import genome_editing.model.genome.Base;
 import genome_editing.model.genome.BaseSet;
-import genome_editing.model.genome.Genotype;
+import simulator.Constants;
+import simulator.model.entity.individuals.Genotype;
 
 public class GenomeVisualizer extends JPanel{
 	Matrix projectionMatrix;
@@ -38,6 +37,7 @@ public class GenomeVisualizer extends JPanel{
 	float baseShift=1f;
 	float rotZ=0f,rotY=0f,rotX=0f;
 	
+	Genotype geno;
 	public GenomeVisualizer(int width, int height, Genotype geno) {
 		this.WIDTH = width;
 		this.HEIGHT = height;
@@ -55,7 +55,7 @@ public class GenomeVisualizer extends JPanel{
 		camera = new Vector3D(0f,0f,0f);
 		lookDir = new Vector3D(0f,0f,1f);
 		
-		
+		this.geno = geno;
 	}
 	
 	@Override
@@ -67,6 +67,8 @@ public class GenomeVisualizer extends JPanel{
 		
 		g2.setColor(Color.white);
 		g2.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+		
+		
 		
 		//time+=0.1f;
 		Matrix zrotation = Matrix.Matrix_MakeRotationZ(this.rotZ);

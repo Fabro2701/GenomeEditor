@@ -1,18 +1,17 @@
 package launcher;
 
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import genome_editing.model.Constants;
 import genome_editing.model.GenomeEditor;
 import genome_editing.model.GenomeVisualizer;
-import genome_editing.model.genome.Chromosome;
-import genome_editing.model.genome.Genotype;
+import simulator.Constants;
+import simulator.model.entity.individuals.Chromosome;
+import simulator.model.entity.individuals.Genotype;
+
 
 public class Launcher extends JFrame{
 	public Launcher() {
@@ -23,7 +22,7 @@ public class Launcher extends JFrame{
 
 		Genotype geno = new Genotype();
 		for(int i=0;i<Constants.PLOIDY;i++) {
-			geno.add(new Chromosome(Constants.CHROMOSOME_LENGTH));
+			geno.add(new Chromosome<Chromosome.Codon>(Constants.CHROMOSOME_LENGTH, Chromosome.Codon::new));
 		}
 		
 		this.setLayout(new GridLayout(1,2));

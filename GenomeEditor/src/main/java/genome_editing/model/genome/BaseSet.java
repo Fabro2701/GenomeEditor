@@ -3,7 +3,8 @@ package genome_editing.model.genome;
 import java.util.ArrayList;
 import java.util.List;
 
-import genome_editing.model.Constants;
+import simulator.Constants;
+
 
 public class BaseSet extends ArrayList<Base>{
 	public int position;
