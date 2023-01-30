@@ -24,6 +24,7 @@ import genome_editing.model.editor.block.RecursiveBlock;
 import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
 import genome_editing.model.elements.Vector3D;
+import simulator.Constants;
 import simulator.model.entity.individuals.Chromosome;
 import simulator.model.entity.individuals.Genotype;
 
@@ -84,7 +85,10 @@ public class GenomeEditor extends Editor{
 		g2.fillRect(2, 0, this.getWidth(), this.getHeight());
 		
 		g2.setColor(Color.black);
-		g2.drawString(geno.toString(), 5, 10);
+		for(int i=0;i<Constants.PLOIDY;i++) {
+			g2.drawString(geno.toString(i), 5, 10+13*i);		
+		}
+		
 		
 		RecursiveBlock block1 = new RecursiveBlock("CODE");
 
