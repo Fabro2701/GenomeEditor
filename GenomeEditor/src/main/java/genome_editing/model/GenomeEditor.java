@@ -25,8 +25,8 @@ import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
 import genome_editing.model.elements.Vector3D;
 import simulator.Constants;
-import simulator.model.entity.individuals.Chromosome;
-import simulator.model.entity.individuals.Genotype;
+import simulator.model.entity.individuals.genome.Chromosome;
+import simulator.model.entity.individuals.genome.Genotype;
 
 public class GenomeEditor extends Editor{
 	Genotype geno;

@@ -17,8 +17,8 @@ import genome_editing.model.editor.parsing.BlockParser;
 import genome_editing.model.elements.Vector2D;
 import simulator.Constants;
 import simulator.RandomSingleton;
-import simulator.model.entity.individuals.Chromosome;
-import simulator.model.entity.individuals.Chromosome.Codon;
+import simulator.model.entity.individuals.genome.Chromosome;
+import simulator.model.entity.individuals.genome.Chromosome.Codon;
 
 public class BlockManager{
 	Chromosome<Chromosome.Codon>chChoice;

@@ -9,8 +9,8 @@ import javax.swing.SwingUtilities;
 import genome_editing.model.GenomeEditor;
 import genome_editing.model.GenomeVisualizer;
 import simulator.Constants;
-import simulator.model.entity.individuals.Chromosome;
-import simulator.model.entity.individuals.Genotype;
+import simulator.model.entity.individuals.genome.Chromosome;
+import simulator.model.entity.individuals.genome.Genotype;
 
 
 public class Launcher extends JFrame{

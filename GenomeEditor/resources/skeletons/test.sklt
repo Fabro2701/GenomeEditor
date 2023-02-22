@@ -23,6 +23,13 @@
 		 Header(name=Str(text="if"),right=<COND>),
 		 Children(e=<LINE>),
 		 Floor()
+		],
+		[
+		 Header(name=Str(text="if"),right=<COND>),
+		 Children(e=<LINE>),
+		 Header(name=Str(text="else"),right=<COND>),
+		 Children(e=<LINE>),
+		 Floor(),
 		].
 <COND> :- [
 		   Header(right=<OBS>,right=<OP>,right=<OBS>)

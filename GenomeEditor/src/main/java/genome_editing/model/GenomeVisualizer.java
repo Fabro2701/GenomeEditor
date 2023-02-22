@@ -20,7 +20,7 @@ import genome_editing.model.elements.Matrix;
 import genome_editing.model.elements.Vector3D;
 import genome_editing.model.genome.BaseSet;
 import simulator.Constants;
-import simulator.model.entity.individuals.Genotype;
+import simulator.model.entity.individuals.genome.Genotype;
 
 public class GenomeVisualizer extends JPanel{
 	Matrix projectionMatrix;
